@@ -1,0 +1,60 @@
+name: '${project.name}'
+version: '${project.version}'
+main: me.youhavetrouble.justchat.JustChat
+api-version: 1.19
+depend: [ PlaceholderAPI ]
+authors: [ YouHaveTrouble ]
+description: '${project.description}'
+website: https://youhavetrouble.me
+permissions:
+  justchat.color:
+    description: "Allows for usage of basic color tags"
+    default: op
+  justchat.bold:
+    description: "Allows for usage of <b>"
+    default: op
+  justchat.italic:
+    description: "Allows for usage of <i> tag"
+    default: op
+  justchat.underlined:
+    description: "Allows for usage of <u> tag"
+    default: op
+  justchat.strikethrough:
+    description: "Allows for usage of <st> tag"
+    default: op
+  justchat.obfuscated:
+    description: "Allows for usage of <obf> tag"
+    default: op
+  justchat.gradient:
+    description: "Allows for usage of <gradient> tag"
+    default: op
+  justchat.font:
+    description: "Allows for usage of <font> tag"
+    default: op
+  justchat.rainbow:
+    description: "Allows for usage of <rainbow> tag"
+    default: op
+  justchat.hover:
+    description: "Allows for usage of <hover> tag"
+    default: op
+  justchat.click:
+    description: "Allows for usage of <click> tag"
+    default: op
+  justchat.format:
+    description: "Allows for usage of <b>, <i>, <u> and <st> tags"
+    children:
+      justchat.bold: true
+      justchat.italic: true
+      justchat.underlined: true
+      justchat.strikethrough: true
+  justchat.colors:
+    description: "Allows for usage of basic color tags, <gradient> and <rainbow> tags"
+    children:
+      justchat.color: true
+      justchat.gradient: true
+      justchat.rainbow: true
+  justchat.actions:
+    description: "Allows for usage of <click> and <hover> tags"
+    children:
+      justchat.click: true
+      justchat.hover: true
