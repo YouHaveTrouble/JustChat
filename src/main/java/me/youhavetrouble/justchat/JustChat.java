@@ -2,31 +2,25 @@ package me.youhavetrouble.justchat;
 
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class JustChat extends JavaPlugin {
 
-    private static String chatFormat;
+    public static Plugin plugin;
 
     private static final MiniMessage miniMessage = MiniMessage.miniMessage();
 
     @Override
     public void onEnable() {
-        reloadPluginConfig();
+        plugin = this;
+        ConfigReload.setConfigDefaults();
         getServer().getPluginManager().registerEvents(new JustChatListener(), this);
-    }
-
-    public void reloadPluginConfig() {
-        saveDefaultConfig();
-        FileConfiguration config = getConfig();
-        chatFormat = config.getString("format", "<%player_displayname%> %message%");
-    }
-
-    public static String getChatFormat() {
-        return chatFormat;
+        this.getCommand("justchat").setExecutor(new CommandHandler());
     }
 
     public static MiniMessage getMiniMessage() {
         return miniMessage;
     }
+
 }
