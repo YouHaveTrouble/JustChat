@@ -14,23 +14,23 @@ import java.util.Map;
 public class CommandHandler implements CommandExecutor, TabCompleter {
     private static final String reloadPermission = "justchat.reload";
     private static final String reloadSubCommand = "reload";
-    private static final Map<ConfigReload.messages, String> pluginMessages = ConfigReload.getPluginMessages();
+    private static final Map<ConfigReload.Message, String> pluginMessages = ConfigReload.getPluginMessages();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 0) {
-            sender.sendMessage(pluginMessages.get(ConfigReload.messages.INVALID_COMMAND));
+            sender.sendMessage(pluginMessages.get(ConfigReload.Message.INVALID_COMMAND));
             return true;
         }
         String subCommand = args[0].toLowerCase();
         if (subCommand.equals(reloadSubCommand)) {
             if (!(sender instanceof Player) || sender.hasPermission(reloadPermission)) {
                 ConfigReload.reloadPluginConfig();
-                sender.sendMessage(pluginMessages.get(ConfigReload.messages.CONFIG_RELOADED));
+                sender.sendMessage(pluginMessages.get(ConfigReload.Message.CONFIG_RELOADED));
                 return true;
             }
         }
-        sender.sendMessage(pluginMessages.get(ConfigReload.messages.NO_PERMISSION));
+        sender.sendMessage(pluginMessages.get(ConfigReload.Message.NO_PERMISSION));
         return false;
     }
 

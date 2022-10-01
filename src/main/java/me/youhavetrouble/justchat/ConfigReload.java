@@ -10,12 +10,13 @@ import java.util.Map;
 public class ConfigReload {
     private static final Plugin plugin = JustChat.plugin;
     private static final FileConfiguration config = plugin.getConfig();
-    private static final HashMap<messages, String> pluginMessages = new HashMap<>();
-    public enum messages{
+    private static final HashMap<Message, String> pluginMessages = new HashMap<>();
+    public enum Message{
         CHAT_FORMAT, NO_PERMISSION, CONFIG_RELOADED, INVALID_COMMAND
     }
 
     public static void reloadPluginConfig() {
+        plugin.saveDefaultConfig();
         plugin.reloadConfig();
         setPluginMessages();
     }
@@ -28,13 +29,13 @@ public class ConfigReload {
 
     private static void setPluginMessages(){
         pluginMessages.clear();
-        pluginMessages.put(messages.CHAT_FORMAT, config.getString("format", "<%player_displayname%> %message%"));
-        pluginMessages.put(messages.NO_PERMISSION, "You do not have permission to use this command");
-        pluginMessages.put(messages.CONFIG_RELOADED, "JustChat config has been reloaded");
-        pluginMessages.put(messages.INVALID_COMMAND, "Invalid Command");
+        pluginMessages.put(Message.CHAT_FORMAT, config.getString("format"));
+        pluginMessages.put(Message.NO_PERMISSION, "You do not have permission to use this command");
+        pluginMessages.put(Message.CONFIG_RELOADED, "JustChat config has been reloaded");
+        pluginMessages.put(Message.INVALID_COMMAND, "Invalid Command");
     }
 
-    public static Map<messages, String> getPluginMessages() {
+    public static Map<Message, String> getPluginMessages() {
         return Collections.unmodifiableMap(pluginMessages);
     }
 }
