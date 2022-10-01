@@ -6,8 +6,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ConfigReload {
-    private static final Plugin plugin = JustChat.plugin;
+public class ConfigHandling {
+    private static final Plugin plugin = JustChat.getInstance();
     private static final HashMap<Message, String> pluginMessages = new HashMap<>();
     public enum Message{
         CHAT_FORMAT, NO_PERMISSION, CONFIG_RELOADED, INVALID_COMMAND

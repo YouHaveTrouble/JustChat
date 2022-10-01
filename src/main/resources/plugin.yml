@@ -61,8 +61,6 @@ permissions:
     children:
       justchat.click: true
       justchat.hover: true
-  justchat.command:
-    description: "Allows for usage of justchat commands"
+  justchat.reload:
+    description: "Allows for usage of the reload command"
     default: op
-    children:
-      justchat.reload: true
