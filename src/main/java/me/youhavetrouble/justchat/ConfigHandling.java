@@ -23,11 +23,15 @@ public class ConfigHandling {
         public String getMessage() {
             return message;
         }
+        public void setMessage(String message) {
+            this.message = message;
+        }
     }
 
     public static void reloadPluginConfig() {
         plugin.saveDefaultConfig();
         plugin.reloadConfig();
+        Message.CHAT_FORMAT.setMessage(plugin.getConfig().getString("format", "<%player_displayname%> %message%"));
     }
 
     public static void setConfigDefaults(){
