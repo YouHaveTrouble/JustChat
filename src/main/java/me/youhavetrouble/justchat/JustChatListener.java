@@ -9,6 +9,7 @@ import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.text.minimessage.tag.standard.StandardTags;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -46,10 +47,13 @@ public class JustChatListener implements Listener {
         if (event.player() == null) return;
 
         String format = ConfigHandling.Message.CHAT_FORMAT.getMessage();
-
+        Component formatComponent;
         format = PlaceholderAPI.setPlaceholders(event.player(), format);
-        Component formatComponent = JustChat.getMiniMessage().deserialize(format);
-
+        if(format.contains("§")){
+            formatComponent = LegacyComponentSerializer.legacySection().deserialize(format);
+        } else {
+            formatComponent = JustChat.getMiniMessage().deserialize(format);
+        }
         Component message = parseMessageContent(event.player(), plainTextComponentSerializer.serialize(event.originalMessage()));
 
         event.result(formatComponent.replaceText(TextReplacementConfig.builder().match("%message%").replacement(message).build()));
