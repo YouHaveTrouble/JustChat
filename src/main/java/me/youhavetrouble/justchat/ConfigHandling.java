@@ -1,15 +1,21 @@
 package me.youhavetrouble.justchat;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.plugin.Plugin;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ConfigHandling {
     private static final Plugin plugin = JustChat.getInstance();
+
+    public static void reloadPluginConfig() {
+        plugin.saveDefaultConfig();
+        plugin.reloadConfig();
+        Message.CHAT_FORMAT.setMessage(plugin.getConfig().getString("format", "<%player_displayname%> %message%"));
+    }
+
+    public static void setConfigDefaults(){
+        plugin.saveDefaultConfig();
+        plugin.getConfig().addDefault("format", "<%player_displayname%> %message%");
+    }
+
     public enum Message{
         CHAT_FORMAT(plugin.getConfig().getString("format", "<%player_displayname%> %message%")),
         NO_PERMISSION("<red>You do not have permission to use this command"),
@@ -26,16 +32,5 @@ public class ConfigHandling {
         public void setMessage(String message) {
             this.message = message;
         }
-    }
-
-    public static void reloadPluginConfig() {
-        plugin.saveDefaultConfig();
-        plugin.reloadConfig();
-        Message.CHAT_FORMAT.setMessage(plugin.getConfig().getString("format", "<%player_displayname%> %message%"));
-    }
-
-    public static void setConfigDefaults(){
-        plugin.saveDefaultConfig();
-        plugin.getConfig().addDefault("format", "<%player_displayname%> %message%");
     }
 }
