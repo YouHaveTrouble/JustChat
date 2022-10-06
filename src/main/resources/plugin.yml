@@ -64,3 +64,5 @@ permissions:
   justchat.reload:
     description: "Allows for usage of the reload command"
     default: op
+    children:
+      justchat.command: true

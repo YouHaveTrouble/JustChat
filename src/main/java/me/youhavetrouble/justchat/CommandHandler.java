@@ -9,7 +9,6 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class CommandHandler implements CommandExecutor, TabCompleter {
     private static final String reloadPermission = "justchat.reload";
