@@ -45,7 +45,7 @@ public class JustChatListener implements Listener {
 
         if (event.player() == null) return;
 
-        String format = JustChat.getChatFormat();
+        String format = ConfigHandling.Message.CHAT_FORMAT.getMessage();
 
         format = PlaceholderAPI.setPlaceholders(event.player(), format);
         Component formatComponent = JustChat.getMiniMessage().deserialize(format);

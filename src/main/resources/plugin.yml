@@ -6,6 +6,9 @@ depend: [ PlaceholderAPI ]
 authors: [ YouHaveTrouble ]
 description: '${project.description}'
 website: https://youhavetrouble.me
+commands:
+  justchat:
+    description: "Base Command for JustChat plugin"
 permissions:
   justchat.color:
     description: "Allows for usage of basic color tags"
@@ -58,3 +61,8 @@ permissions:
     children:
       justchat.click: true
       justchat.hover: true
+  justchat.reload:
+    description: "Allows for usage of the reload command"
+    default: op
+    children:
+      justchat.command: true
