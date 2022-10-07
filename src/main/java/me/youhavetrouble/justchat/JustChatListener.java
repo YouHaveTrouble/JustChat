@@ -1,7 +1,9 @@
 package me.youhavetrouble.justchat;
 
+import io.papermc.paper.chat.ChatRenderer;
 import io.papermc.paper.event.player.AsyncChatCommandDecorateEvent;
 import io.papermc.paper.event.player.AsyncChatDecorateEvent;
+import io.papermc.paper.event.player.AsyncChatEvent;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextReplacementConfig;
@@ -9,6 +11,7 @@ import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.text.minimessage.tag.standard.StandardTags;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -18,13 +21,16 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.AsyncPlayerChatPreviewEvent;
 import org.bukkit.permissions.Permission;
 
-
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class JustChatListener implements Listener {
 
     private final HashMap<Permission, TagResolver> formattingPerms = new HashMap<>();
     private final PlainTextComponentSerializer plainTextComponentSerializer = PlainTextComponentSerializer.plainText();
+
+    private final Pattern placeholderPattern = PlaceholderAPI.getPlaceholderPattern();
 
     public JustChatListener() {
         formattingPerms.put(new Permission("justchat.color"), StandardTags.color());
@@ -46,21 +52,19 @@ public class JustChatListener implements Listener {
         if (event.player() == null) return;
 
         String format = ConfigHandling.Message.CHAT_FORMAT.getMessage();
-
-        format = PlaceholderAPI.setPlaceholders(event.player(), format);
-        Component formatComponent = JustChat.getMiniMessage().deserialize(format);
+        Component formatComponent = parseFormat(event.player(), format);
 
         Component message = parseMessageContent(event.player(), plainTextComponentSerializer.serialize(event.originalMessage()));
 
         event.result(formatComponent.replaceText(TextReplacementConfig.builder().match("%message%").replacement(message).build()));
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onAsyncChatPreviewEvent(AsyncPlayerChatPreviewEvent event) {
         event.setFormat("%2$s");
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onAsyncChatEvent(AsyncPlayerChatEvent event) {
         event.setFormat("%2$s");
     }
@@ -83,6 +87,31 @@ public class JustChatListener implements Listener {
         MiniMessage messageParser = MiniMessage.builder().tags(tagResolver.build()).build();
         return messageParser.deserialize(rawMessage);
 
+    }
+
+    private Component parseFormat(Player player, String format) {
+
+        Component formatComponent = JustChat.getMiniMessage().deserialize(format);
+
+        if (PlaceholderAPI.containsPlaceholders(format)) {
+            Matcher matcher = placeholderPattern.matcher(format);
+            while (matcher.find()) {
+                String string = matcher.group(0);
+
+                String parsedPlaceholder = PlaceholderAPI.setPlaceholders(player, string);
+                if (parsedPlaceholder.equals(string)) continue;
+
+                Component placeholderComponent = LegacyComponentSerializer.legacySection().deserialize(parsedPlaceholder);
+
+                TextReplacementConfig replacementConfig = TextReplacementConfig
+                        .builder()
+                        .match(string)
+                        .replacement(placeholderComponent)
+                        .build();
+                formatComponent = formatComponent.replaceText(replacementConfig);
+            }
+        }
+        return formatComponent;
     }
 
 }
